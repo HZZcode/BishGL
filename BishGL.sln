@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishGL", "BishGL\BishGL.csproj", "{AF8FF3D5-13EE-4A83-AEC8-0E346A079661}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishSdk", "..\Bish\BishSdk\BishSdk.csproj", "{1A339D86-D0C9-4565-B712-311CB4128732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishRuntime", "..\Bish\BishRuntime\BishRuntime.csproj", "{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF8FF3D5-13EE-4A83-AEC8-0E346A079661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF8FF3D5-13EE-4A83-AEC8-0E346A079661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF8FF3D5-13EE-4A83-AEC8-0E346A079661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF8FF3D5-13EE-4A83-AEC8-0E346A079661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A339D86-D0C9-4565-B712-311CB4128732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A339D86-D0C9-4565-B712-311CB4128732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A339D86-D0C9-4565-B712-311CB4128732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A339D86-D0C9-4565-B712-311CB4128732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Raylib-cs" Version="7.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Bish\BishRuntime\BishRuntime.csproj"/>
+        <ProjectReference Include="..\..\Bish\BishSdk\BishSdk.csproj"/>
+    </ItemGroup>
+
+    <Target Name="MergeAssemblies" AfterTargets="Build">
+        <ItemGroup>
+            <InputAssemblies Include="$(OutputPath)$(AssemblyName).dll"/>
+            <InputAssemblies Include="$(OutputPath)Raylib-cs.dll"/>
+        </ItemGroup>
+
+        <ILRepack
+                Parallel="true"
+                InputAssemblies="@(InputAssemblies)"
+                LibraryPath="$(OutputPath)"
+                TargetKind="Dll"
+                OutputFile="$(OutputPath)$(AssemblyName).dll"
+        />
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="MergeAssemblies">
+        <ItemGroup>
+            <PluginFiles Include="$(OutputPath)$(AssemblyName).dll"/>
+            <NativeLibs Include="$(OutputPath)runtimes\win-x64\native\*.*"/>
+        </ItemGroup>
+
+        <PropertyGroup>
+            <PluginsDir>$(SolutionDir)BishGL/</PluginsDir>
+        </PropertyGroup>
+
+        <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PluginsDir)" SkipUnchangedFiles="true"/>
+
+        <Copy SourceFiles="@(NativeLibs)" DestinationFolder="$(PluginsDir)" SkipUnchangedFiles="true"/>
+    </Target>
+
+</Project>

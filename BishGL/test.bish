@@ -1,0 +1,14 @@
+{.Color, .GL} := import("BishGL.dll");
+
+width := 800;
+height := 600;
+
+Black := Color(0, 0, 0);
+White := Color(255, 255, 255);
+
+func loop(gl) {
+    gl.drawCircle((width / 2).floor(), (height / 2).floor(), 100, Black);
+};
+
+gl := GL(width, height, White);
+gl.loop(loop);
