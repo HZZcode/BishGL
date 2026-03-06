@@ -14,11 +14,8 @@ public class BishColor(Color color) : BishObject
     public static BishColor Create(BishObject _) => new(Color.Blank);
 
     [Builtin("hook")]
-    public static BishNull Init(BishColor self, BishInt r, BishInt g, BishInt b, [DefaultNull] BishInt? a)
-    {
+    public static void Init(BishColor self, BishInt r, BishInt g, BishInt b, [DefaultNull] BishInt? a) =>
         self.Color = new Color(r.Value, g.Value, b.Value, a?.Value ?? 255);
-        return BishNull.Instance;
-    }
 
     [Builtin("hook")]
     public static BishInt Get_r(BishColor self) => BishInt.Of(self.Color.R);
