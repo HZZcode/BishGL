@@ -86,8 +86,8 @@ class Player {
 };
 
 class KillBox {
-    init(self, gl) {
-        self.g = gl.random(0, 7);
+    func new(self, gl) {
+        self.g = gl.random(0, 4);
         switch (self.g) {
             case 0 or 1: {
                 self.x = self.g == 0 ? -size : size + width;
@@ -104,12 +104,24 @@ class KillBox {
         }
         self.ym = gl.random(100, 200) / 100 * height + size;
     };
+    init(self, gl) {
+        self.new(gl);
+        self.y = height + size;
+    };
     func tick(self, gl) {
         dt := gl.dt;
-        if (self.y > self.ym || self.x < -size || self.x > width + size) self.hook_init(gl);
+        if (self.y > self.ym) self.new(gl);
         self.x += self.vx * dt;
         self.y -= self.vy * dt;
         if (self.vy <= vbm) self.vy -= g0 * dt;
+        if (self.x < left && self.vx < 0) {
+            self.x = left;
+            self.vx *= -1;
+        }
+        if (self.x > right && self.vx > 0) {
+            self.x = right;
+            self.vx *= -1;
+        }
         drawBox(self.x, self.y, size, size, Blue);
         if ((player.x - self.x).abs() < size && (player.y - self.y).abs() < (size + player.h) / 2) {
             gl.exit();
