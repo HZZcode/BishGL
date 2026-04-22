@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Bish\BishRuntimeGenerators\BishRuntimeGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
         <ProjectReference Include="..\..\Bish\BishRuntime\BishRuntime.csproj"/>
         <ProjectReference Include="..\..\Bish\BishSdk\BishSdk.csproj"/>
     </ItemGroup>

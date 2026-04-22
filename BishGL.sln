@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishSdk", "..\Bish\BishSdk\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishRuntime", "..\Bish\BishRuntime\BishRuntime.csproj", "{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BishRuntimeGenerators", "..\Bish\BishRuntimeGenerators\BishRuntimeGenerators.csproj", "{84C6786A-5469-4335-BCA1-91DA43657C2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F1D797C-3639-4728-8CA8-6EF7C9F133DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C6786A-5469-4335-BCA1-91DA43657C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C6786A-5469-4335-BCA1-91DA43657C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C6786A-5469-4335-BCA1-91DA43657C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C6786A-5469-4335-BCA1-91DA43657C2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

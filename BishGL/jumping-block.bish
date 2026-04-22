@@ -26,39 +26,40 @@ g0 := 300;
 g1 := 400;
 vbm := 100;
 
-func drawBox(x, y, w, h, c) => gl.drawRectangle((x - w / 2).floor(), (y - h / 2).floor(), w.floor(), h.floor(), c);
+func drawBox(x, y, w, h, c) gl.drawRectangle((x - w / 2).floor(), (y - h / 2).floor(), w.floor(), h.floor(), c);
 
 class Player {
     init(self, x, y) {
-        self.x = x; self.y = y;
-        self.h = size;
-        self.vx = self.vy = 0;
-        self.ct = 0;
-        self.c = 0;
-        self.cj = 0;
+        self.x := x;
+        self.y := y;
+        self.h := size;
+        self.vx := self.vy := 0;
+        self.ct := 0;
+        self.c := 0;
+        self.cj := 0;
     };
-    func buttom(self) => height - self.h / 2;
-    func onGround(self) => self.y >= self.buttom();
-    func jump(self, gl) => gl.pressed(87); // W
-    func direction(self, gl) => gl.keyDown(68) ? 1 : gl.keyDown(65) ? -1 : 0; // A or D
-    func crouch(self, gl) => gl.keyDown(83); // S
-    func gravity(self, gl) => self.crouch(gl) ? g1 : g0;
+    func buttom(self) height - self.h / 2;
+    func onGround(self) self.y >= self.buttom();
+    func jump(self, gl) gl.pressed(87); // W
+    func direction(self, gl) if (gl.keyDown(68)) 1 else if (gl.keyDown(65)) -1 else 0; // A or D
+    func crouch(self, gl) gl.keyDown(83); // S
+    func gravity(self, gl) if (self.crouch(gl)) g1 else g0;
     func tick(self, gl) {
         dt := gl.dt;
         c := self.crouch(gl);
-        self.h = size * (c ? 0.5 : 1);
+        self.h = size * (if (c) 0.5 else 1);
         if (c && self.ct <= 0) self.ct = ct0;
         self.ct -= dt;
         self.cj -= dt;
         if (self.c > 0 && self.jump(gl)) {
             self.c -= 1;
             if (self.ct > 0) self.cj = 1;
-            self.vy -= self.ct > 0 ? vy1 : vy0;
-        }
+            self.vy -= if (self.ct > 0) vy1 else vy0;
+        };
         self.vy += self.gravity(gl) * dt;
         if (!self.jump(gl)) self.vy *= f;
-        self.vx += (self.onGround() ? vx0 : vx1) * self.direction(gl);
-        self.vx *= self.onGround() ? f : f1;
+        self.vx += (if (self.onGround()) vx0 else vx1) * self.direction(gl);
+        self.vx *= if (self.onGround()) f else f1;
         if (self.vx.abs() <= 2) self.vx = 0;
         self.x += self.vx * dt;
         self.y += self.vy * dt;
@@ -66,43 +67,43 @@ class Player {
             self.c = 2;
             self.y = self.buttom();
             self.vy = 0;
-        }
+        };
         if (self.x < left) {
             self.x = left;
             self.vx = 0;
-        }
+        };
         if (self.x > right) {
             self.x = right;
             self.vx = 0;
-        }
+        };
         for (r : range(R, size.floor(), -dr)) {
             c := ((R - r) / 2).floor();
             c := Color(c, c, c);
             gl.drawCircle(self.x.floor(), self.y.floor(), r, c);
-        }
-        c := Color(255, (165.0 * (self.cj > 0 ? self.cj : 0)).floor(), 0);
+        };
+        c := Color(255, (165.0 * (if (self.cj > 0) self.cj else 0)).floor(), 0);
         drawBox(self.x, self.y, size, self.h, c);
     };
 };
 
 class KillBox {
     func new(self, gl) {
-        self.g = gl.random(0, 4);
-        switch (self.g) {
-            case 0 or 1: {
-                self.x = self.g == 0 ? -size : size + width;
-                self.y = gl.random(0, height) * 1.0;
-                self.vx = gl.random(vbm, vbm * 2) * (self.g == 0 ? 1.0 : -1.0);
-                self.vy = gl.random(-vbm, vbm) * 1.0;
+        self.g := gl.random(0, 4);
+        self.g switch {
+            0 or 1 => {
+                self.x := if (self.g == 0) -size else size + width;
+                self.y := gl.random(0, height) * 1.0;
+                self.vx := gl.random(vbm, vbm * 2) * (if (self.g == 0) 1.0 else -1.0);
+                self.vy := gl.random(-vbm, vbm) * 1.0;
+            },
+            _ => {
+                self.x := gl.random(0, width) * 1.0;
+                self.y := -size;
+                self.vx := gl.random(-vbm, vbm) * 1.0;
+                self.vy := gl.random(0, vbm) * 1.0;
             }
-            case _: {
-                self.x = gl.random(0, width) * 1.0;
-                self.y = -size;
-                self.vx = gl.random(-vbm, vbm) * 1.0;
-                self.vy = gl.random(0, vbm) * 1.0;
-            }
-        }
-        self.ym = gl.random(100, 200) / 100 * height + size;
+        };
+        self.ym := gl.random(100, 200) / 100 * height + size;
     };
     init(self, gl) {
         self.new(gl);
@@ -117,14 +118,14 @@ class KillBox {
         if (self.x < left && self.vx < 0) {
             self.x = left;
             self.vx *= -1;
-        }
+        };
         if (self.x > right && self.vx > 0) {
             self.x = right;
             self.vx *= -1;
-        }
+        };
         drawBox(self.x, self.y, size, size, Blue);
         if ((player.x - self.x).abs() < size && (player.y - self.y).abs() < (size + player.h) / 2) {
-            gl.exit();
+            gl.close();
             print("You lose! Score: {}\n".format(gl.time));
         }
     };
@@ -133,7 +134,7 @@ class KillBox {
 gl := GL(width, height);
 
 player := Player(width / 2, height / 2);
-boxes := list(range(5)).map((_) => KillBox(gl));
+boxes := range(5).map((_) KillBox(gl)).toList();
 
 gl.loop((gl) {
     player.tick(gl);

@@ -7,7 +7,8 @@ public class Plugin : IPlugin
 {
     public void Initialize(PluginExports exports)
     {
+        BuiltinsRegistry.Register();
         exports.Exports.Add("Color", BishColor.StaticType);
-        exports.Exports.Add("GL", BishGL.StaticType);
+        exports.Exports.Add("GL", BishGl.StaticType);
     }
 }

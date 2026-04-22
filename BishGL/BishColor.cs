@@ -28,6 +28,4 @@ public class BishColor(Color color) : BishObject
 
     [Builtin("hook")]
     public static BishInt Get_a(BishColor self) => BishInt.Of(self.Color.A);
-
-    static BishColor() => BishBuiltinBinder.Bind<BishColor>();
 }
