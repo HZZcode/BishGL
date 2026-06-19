@@ -4,44 +4,40 @@ using Raylib_cs;
 
 namespace BishGL;
 
-public class BishGl : BishObject
+public class BishGl(int width, int height, string title, int fps, Color background) : BishObject
 {
-    public int Width = 800;
-    public int Height = 600;
-    public string Title = "BishGL";
-    public int Fps = 60;
-    public Color Background = Color.Black;
+    public readonly int Width = width;
+    public readonly int Height = height;
+    public readonly string Title = title;
+    public readonly int Fps = fps;
+    public readonly Color Background = background;
+
     public Image Canvas;
     public Texture2D Texture;
     public bool End;
 
-    private static readonly BishGl Instance = new();
+    private static BishGl? Instance { get; set; }
 
     public new static readonly BishType StaticType = new("GL");
     public override BishType DefaultType => StaticType;
 
     [Builtin("hook")]
-    public static BishGl Create(BishObject _) => Instance;
-
-    [Builtin("hook")]
-    public static void Init(BishGl self, [DefaultNull] BishInt? width, [DefaultNull] BishInt? height,
+    public static BishGl New([DefaultNull] BishInt? width, [DefaultNull] BishInt? height,
         [DefaultNull] BishColor? background, [DefaultNull] BishString? title, [DefaultNull] BishInt? fps)
     {
-        if (width is not null) self.Width = width.Value;
-        if (height is not null) self.Height = height.Value;
-        if (title is not null) self.Title = title.Value;
-        if (fps is not null) self.Fps = fps.Value;
-        if (background is not null) self.Background = background.Color;
-
+        if (Instance is not null) return Instance;
+        Instance = new BishGl(width?.Value ?? 800, height?.Value ?? 600, title?.Value ?? "BishGL", fps?.Value ?? 60,
+            background?.Color ?? Color.Black);
         Raylib.SetTraceLogLevel(TraceLogLevel.Warning);
-        Raylib.InitWindow(self.Width, self.Height, self.Title);
-        Raylib.SetTargetFPS(self.Fps);
-        self.Canvas = Raylib.GenImageColor(self.Width, self.Height, self.Background);
-        self.Texture = Raylib.LoadTextureFromImage(self.Canvas);
+        Raylib.InitWindow(Instance.Width, Instance.Height, Instance.Title);
+        Raylib.SetTargetFPS(Instance.Fps);
+        Instance.Canvas = Raylib.GenImageColor(Instance.Width, Instance.Height, Instance.Background);
+        Instance.Texture = Raylib.LoadTextureFromImage(Instance.Canvas);
+        return Instance;
     }
 
     [Builtin]
-    public static void Loop(BishGl self, BishObject callback) => self.Run(gl => callback.Call([gl]));
+    public static void Loop(BishGl self, BishObject callback) => self.Run(gl => callback.Call(new BishArgs([gl])));
 
     [Builtin]
     public static void DrawPixel(BishGl self, BishInt x, BishInt y, BishColor color) =>
@@ -66,7 +62,7 @@ public class BishGl : BishObject
             new Vector2(x2.Value, y2.Value), new Vector2(x3.Value, y3.Value), color.Color);
 
     [Builtin("hook")]
-    public static BishNum Get_time(BishGl self) => new(Raylib.GetTime());
+    public static BishNum Get_time(BishGl _) => new(Raylib.GetTime());
 
     [Builtin("hook")]
     public static BishInt Get_width(BishGl self) => BishInt.Of(self.Width);
@@ -81,31 +77,24 @@ public class BishGl : BishObject
     public static BishInt Get_fps(BishGl self) => BishInt.Of(self.Fps);
 
     [Builtin("hook")]
-    public static BishInt Get_realFps(BishGl self) => BishInt.Of(Raylib.GetFPS());
+    public static BishInt Get_realFps(BishGl _) => BishInt.Of(Raylib.GetFPS());
 
     [Builtin("hook")]
-    public static BishNum Get_dt(BishGl self) => new(Raylib.GetFrameTime());
+    public static BishNum Get_dt(BishGl _) => new(Raylib.GetFrameTime());
 
     [Builtin("hook")]
     public static BishColor Get_background(BishGl self) => new(self.Background);
 
-    [Builtin("hook")]
-    public static BishColor Set_background(BishGl self, BishColor color)
-    {
-        self.Background = color.Color;
-        return color;
-    }
-
     [Builtin]
-    public static BishInt Random(BishGl self, BishInt min, BishInt max) =>
+    public static BishInt Random(BishGl _, BishInt min, BishInt max) =>
         BishInt.Of(Raylib.GetRandomValue(min.Value, max.Value));
 
     [Builtin]
-    public static BishBool KeyDown(BishGl self, BishInt key) =>
+    public static BishBool KeyDown(BishGl _, BishInt key) =>
         BishBool.Of(Raylib.IsKeyDown((KeyboardKey)key.Value));
 
     [Builtin]
-    public static BishBool Pressed(BishGl self, BishInt key) =>
+    public static BishBool Pressed(BishGl _, BishInt key) =>
         BishBool.Of(Raylib.IsKeyPressed((KeyboardKey)key.Value));
 
     [Builtin]
@@ -113,17 +102,11 @@ public class BishGl : BishObject
 
     public void Run(Action<BishGl> callback)
     {
-        while (!Raylib.WindowShouldClose())
+        while (!Raylib.WindowShouldClose() && !End)
         {
             Raylib.ImageClearBackground(ref Canvas, Background);
 
             callback(this);
-
-            if (End)
-            {
-                Raylib.CloseWindow();
-                return;
-            }
 
             unsafe
             {

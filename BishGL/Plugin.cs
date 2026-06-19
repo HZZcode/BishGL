@@ -1,14 +1,13 @@
-﻿using BishSdk;
+﻿using BishRuntime;
 
 namespace BishGL;
 
-// ReSharper disable once UnusedType.Global
-public class Plugin : IPlugin
+public struct Module : IModule
 {
-    public void Initialize(PluginExports exports)
-    {
-        BuiltinsRegistry.Register();
-        exports.Exports.Add("Color", BishColor.StaticType);
-        exports.Exports.Add("GL", BishGl.StaticType);
-    }
+    public static BishObject Exports => IModule.ExportsFrom(
+        ("Color", BishColor.StaticType),
+        ("GL", BishGl.StaticType)
+    );
+
+    static Module() => BuiltinsRegistry.Register();
 }
